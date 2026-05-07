@@ -1,0 +1,35 @@
+{
+  "name": "gestao_universidade_server",
+  "version": "1.0.0",
+  "description": "P.I - Projeto Integrador SENAC - Grupo 01 - Sistema de Gestão de Universidade",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "start": "npx tsc && node build/index.js"
+  },
+  "keywords": [
+    "Projeto Integrador",
+    "Faculdade",
+    "Gestão de Universidade"
+  ],
+  "author": "Júlio Caria",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@fastify/swagger": "^9.7.0",
+    "@scalar/fastify-api-reference": "^1.55.3",
+    "argon2": "^0.44.0",
+    "dotenv": "^17.4.2",
+    "drizzle-orm": "^0.45.2",
+    "fastify": "^5.8.5",
+    "fastify-pino-pretty": "^5.2.1",
+    "pg": "^8.20.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.20.0",
+    "drizzle-kit": "^0.31.10",
+    "tsx": "^4.21.0"
+  }
+}

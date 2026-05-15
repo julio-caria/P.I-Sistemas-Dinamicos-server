@@ -2,7 +2,6 @@ import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { checkRequestJWT } from "./hooks/check-request-jwt.ts";
 import z from "zod";
 import { getUserFromRequest } from "../utils/getUserFromRequest.ts";
-import { eq } from "drizzle-orm";
 import { db } from "../database/client.ts";
 import { alunos } from "../database/schema.ts";
 
@@ -25,25 +24,35 @@ export const createStudentRoute: FastifyPluginAsyncZod = async (server) => {
       },
       body: z.object({
         nome: z.string(),
-        cpf: z.number(),
+        cpf: z.string(),
         email: z.email(),
-        telefone: z.number(),
+        telefone: z.string(),
         endereco: z.string(),
         ra: z.string(),
-        dataIngresso: z.date(),
+        dataIngresso: z.coerce.date(),
       })
+      
     }
   }, async (request, reply) => {
     const user = getUserFromRequest(request);
+    const { nome, cpf, email, telefone, endereco, ra, dataIngresso } = request.body;
 
     if(!user) {
       return reply.status(401).send({ message: "You are'n authorized to use this resource"})
     }
 
     const result = await db
-      .select()
-      .from(alunos)
-      .where(eq(alunos.id, user.sub));
+      .insert(alunos)
+      .values({
+        nome,
+        cpf,
+        email,
+        telefone,
+        endereco,
+        ra,
+        dataIngresso
+      })
+      .returning();
 
     return reply.send({ studentId: result[0].id });
   })

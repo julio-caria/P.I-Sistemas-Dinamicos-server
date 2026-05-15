@@ -5,7 +5,7 @@ import { eq } from 'drizzle-orm';
 import { usuarios } from '../database/schema.ts';
 import { hash } from 'argon2';
 
-export const registerRoute: FastifyPluginAsyncZod = async (server) => { 
+export const createUserRoute: FastifyPluginAsyncZod = async (server) => { 
   server.post("/api/users", {
     schema: {
       tags: ["Authentication"],

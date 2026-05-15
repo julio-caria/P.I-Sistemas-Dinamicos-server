@@ -1,17 +1,6 @@
 import type { FastifyReply, FastifyRequest } from "fastify";
 import jwt from "jsonwebtoken";
-
-type JWTPayload = {
-  sub: string, // User Id 
-  role: UserRole // Role
-}
-
-enum UserRole {]
-  ADMIN = 'admin',
-  SECRETARY = 'secretaria',
-  FINANCE = 'financeiro',
-  COORDINATOR = 'coordenacao'
-}
+import type { JWTPayload } from "../../types/user.ts";
 
 export async function checkRequestJWT(request: FastifyRequest, reply: FastifyReply) {
   const token = request.headers.authorization;

@@ -4,6 +4,8 @@ import { jsonSchemaTransform, serializerCompiler, validatorCompiler } from "fast
 import scalarAPIReference from "@scalar/fastify-api-reference";
 import { getStudentsRoute } from "./routes/getStudentsRoute.ts";
 import { createStudentRoute } from "./routes/createStudentsRoute.ts";
+import { createUserRoute } from "./routes/createUserRoute.ts";
+import { loginRoute } from "./routes/loginRoute.ts";
 
 const server = fastify({
   logger: {
@@ -21,8 +23,8 @@ if(process.env.NODE_ENVIRONMENT === "development") {
   server.register(fastifySwagger, {
     openapi: {
       info: {
-        title: 'Sentinel Helpdesk API',
-        description: 'API to helpdesk SAAS',
+        title: 'Unigest API',
+        description: 'API to university management',
         version: '1.0.0',
       },
     },
@@ -49,6 +51,8 @@ server.listen({ port: 3333, host: '0.0.0.0' }, (err) => {
 server.setValidatorCompiler(validatorCompiler);
 server.setSerializerCompiler(serializerCompiler);
 
+server.register(createUserRoute);
+server.register(loginRoute);
 server.register(getStudentsRoute);
 server.register(createStudentRoute);
 

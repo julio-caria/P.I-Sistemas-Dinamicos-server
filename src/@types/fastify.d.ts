@@ -1,10 +1,7 @@
-import type { UserRole } from "../types/user.ts";
+import type { JWTPayload } from "../types/user.ts";
 
-declare module "fastify" { 
+declare module "fastify" {
   export interface FastifyRequest {
-    user?: {
-      sub: string,
-      role: UserRole,
-    }
+    user?: JWTPayload;
   }
 }

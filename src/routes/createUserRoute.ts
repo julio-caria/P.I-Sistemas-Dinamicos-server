@@ -8,7 +8,7 @@ import { hash } from 'argon2';
 export const createUserRoute: FastifyPluginAsyncZod = async (server) => { 
   server.post("/api/users", {
     schema: {
-      tags: ["Authentication"],
+      tags: ["Users"],
       description: "Register an user with email, username and password", 
       summary: "",
       body: z.object({

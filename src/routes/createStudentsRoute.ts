@@ -1,6 +1,6 @@
 import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { checkRequestJWT } from "./hooks/check-request-jwt.ts";
-import z from "zod";
+import { z } from "zod";
 import { getUserFromRequest } from "../utils/getUserFromRequest.ts";
 import { db } from "../database/client.ts";
 import { alunos } from "../database/schema.ts";
@@ -11,7 +11,7 @@ export const createStudentRoute: FastifyPluginAsyncZod = async (server) => {
       checkRequestJWT,
     ],
     schema: {
-      tags: ["Student"],
+      tags: ["Students"],
       description: "Create an enrollment to student",
       summary: "",
       response: {

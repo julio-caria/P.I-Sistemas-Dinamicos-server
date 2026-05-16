@@ -55,7 +55,7 @@ export const alunos = pgTable(
     endereco:     varchar('endereco', { length: 255 }).notNull(),
     ra:           varchar('ra', { length: 20 }).notNull(),
     dataIngresso: timestamp('data_ingresso').notNull(),
-    ativo:        boolean('ativo').default(true),
+    ativo:        boolean('ativo').default(true).notNull(),
     createdAt:    timestamp('created_at').defaultNow(),
     updatedAt:    timestamp('updated_at').defaultNow(),
   },

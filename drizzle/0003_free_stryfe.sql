@@ -1,0 +1,1 @@
+ALTER TABLE "alunos" ALTER COLUMN "ativo" SET NOT NULL;

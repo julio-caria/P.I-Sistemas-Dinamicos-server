@@ -6,6 +6,7 @@ import { getStudentsRoute } from "./routes/getStudentsRoute.ts";
 import { createStudentRoute } from "./routes/createStudentsRoute.ts";
 import { createUserRoute } from "./routes/createUserRoute.ts";
 import { loginRoute } from "./routes/loginRoute.ts";
+import { createCourseRoute } from "./routes/createCourseRoute.ts";
 
 const server = fastify({
   logger: {
@@ -55,5 +56,6 @@ server.register(createUserRoute);
 server.register(loginRoute);
 server.register(getStudentsRoute);
 server.register(createStudentRoute);
+server.register(createCourseRoute);
 
 export { server };

@@ -14,6 +14,10 @@ export const getStudentsRoute: FastifyPluginAsyncZod = async (server) => {
       tags: ["Students"],
       description: "Return all students registered on system",
       summary: "",
+      querystring: z.object({
+        search: z.string().optional(),
+        orderBy: z.enum(['ra', 'nome', 'cpf'])
+      }),
       response: {
         200: z.object({
           students: z.array(z.object({
@@ -24,8 +28,8 @@ export const getStudentsRoute: FastifyPluginAsyncZod = async (server) => {
             telefone: z.string(),
             endereco: z.string(),
             ra: z.string(),
-            dataIngresso: z.date(),
-            ativo: alunos.ativo ? "Ativo" : "Inativo",
+            dataIngresso: z.coerce.date(),
+            ativo: z.boolean().optional(),
           }))
         }),
         401: z.object({

@@ -23,7 +23,7 @@ export const createCourseRoute: FastifyPluginAsyncZod = async (server) => {
         }),
         response: {
           201: z.object({
-            courseId: z.string(),
+            id: z.string(),
           }),
           401: z.object({
             message: z.string(),
@@ -50,7 +50,7 @@ export const createCourseRoute: FastifyPluginAsyncZod = async (server) => {
           })
           .returning();
 
-        return reply.status(201).send({ courseId: result.id });
+        return reply.status(201).send({ id: result.id });
       } catch (err) {
         request.log.error(err);
         return reply.status(500).send({ message: `Couldn't complete this request, ${err}`})

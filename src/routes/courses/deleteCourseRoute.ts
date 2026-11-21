@@ -16,12 +16,12 @@ export const deleteCourseRoute: FastifyPluginAsyncZod = async (server) => {
         summary: "Delete Course",
         description: "Performs a logical deletion of a course.",
         params: z.object({
-          courseId: z.string().uuid(),
+          id: z.string().uuid(),
         }),
         response: {
           200: z.object({
             message: z.string(),
-            courseId: z.string().uuid(),
+            id: z.string().uuid(),
           }),
           401: z.object({
             message: z.string(),
@@ -44,7 +44,7 @@ export const deleteCourseRoute: FastifyPluginAsyncZod = async (server) => {
         });
       }
 
-      const { courseId } = request.params;
+      const { id } = request.params;
 
       try {
         const [deletedCourse] = await db
@@ -53,7 +53,7 @@ export const deleteCourseRoute: FastifyPluginAsyncZod = async (server) => {
             isActive: false,
             updatedAt: new Date(),
           })
-          .where(eq(courses.id, courseId))
+          .where(eq(courses.id, id))
           .returning({
             id: courses.id,
           });
@@ -66,11 +66,11 @@ export const deleteCourseRoute: FastifyPluginAsyncZod = async (server) => {
 
         return reply.status(200).send({
           message: "Course successfully deactivated.",
-          courseId: deletedCourse.id,
+          id: deletedCourse.id,
         });
       } catch (error) {
         server.log.error(
-          { error, courseId },
+          { error, id },
           "Error while deactivating course.",
         );
 

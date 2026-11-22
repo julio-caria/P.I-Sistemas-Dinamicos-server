@@ -1,13 +1,17 @@
 @baseUrl = https://p-i-sistemas-dinamicos-server.onrender.com/api/v1
+@baseUrlDev = http://localhost:3000/api/v1
 
+###
 # HEALTH ROUTE
+GET http://localhost:3000/
+###
 GET https://p-i-sistemas-dinamicos-server.onrender.com/
 
 ###
 
 # 1. AUTHENTICATE ROUTE
 # @name login
-POST {{baseUrl}}/login
+POST {{{{baseUrlDev}}}}/login
 Content-Type: application/json
 
 { 
@@ -37,3 +41,6 @@ Authorization: Bearer {{authToken}}
   "lastName": "Doe",
   "personalEmail": "johndoe@example.com"
 }
+
+###
+

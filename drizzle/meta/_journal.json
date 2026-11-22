@@ -5,50 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1778803939936,
-      "tag": "0000_long_exodus",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1778806894757,
-      "tag": "0001_workable_vance_astro",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1778808386198,
-      "tag": "0002_purple_celestials",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1778848004978,
-      "tag": "0003_free_stryfe",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1794753153135,
-      "tag": "0004_fantastic_micromacro",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1794788908869,
-      "tag": "0005_fast_human_fly",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1795257155009,
-      "tag": "0006_mysterious_marrow",
+      "when": 1795364436887,
+      "tag": "0000_lovely_titania",
       "breakpoints": true
     }
   ]

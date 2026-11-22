@@ -28,6 +28,9 @@ export const loginRoute: FastifyPluginAsyncZod = async (server) => {
         }),
         401: z.object({
           message: z.string(),
+        }),
+        500: z.object({
+          message: z.string(),
         })
       }
     }
@@ -56,7 +59,14 @@ export const loginRoute: FastifyPluginAsyncZod = async (server) => {
 
       return reply.status(200).send({ token })
     } catch(err) { 
-      throw new Error("Can't login on system, try Again! Internal Error")
+      request.log.error(err);
+      const detail =
+        process.env.NODE_ENV === "production"
+          ? ""
+          : ` [${(err as { cause?: Error }).cause?.message ?? (err as Error).message}]`;
+      return reply
+        .status(500)
+        .send({ message: `Unable to update student.${detail}` });
     }
   })
 }

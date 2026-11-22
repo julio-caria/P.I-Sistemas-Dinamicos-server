@@ -1,1 +1,0 @@
-ALTER TABLE "alunos" ALTER COLUMN "data_ingresso" SET DATA TYPE timestamp;

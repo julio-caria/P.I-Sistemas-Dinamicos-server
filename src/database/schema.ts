@@ -1,6 +1,5 @@
 import {
   pgTable,
-  pgEnum,
   uuid,
   varchar,
   integer,
@@ -13,7 +12,7 @@ import {
   uniqueIndex,
   index,
 } from 'drizzle-orm/pg-core'
-import { academicSemesterEnum, courseModalityEnum, degreeLevelEnum, enrollmentStatusEnum, genderEnum, studentStatusEnum, userRoleEnum } from './schema/enums.ts'
+import { academicSemesterEnum, courseModalityEnum, degreeLevelEnum, enrollmentStatusEnum, genderEnum, studentStatusEnum, userRoleEnum, classStatusEnum } from './schema/enums.ts'
 
 export const students = pgTable(
   "students",
@@ -101,30 +100,33 @@ export const courses = pgTable('courses', {
   isActive:         boolean('is_active').default(true).notNull(),
   createdAt:        timestamp('created_at').defaultNow().notNull(),
   updatedAt:        timestamp('updated_at').defaultNow().notNull(),
-})
+});
 
 export const classes = pgTable(
-  'classes',
+  "classes",
   {
-    id:          uuid('id').primaryKey().defaultRandom(),
-    courseId:    uuid('course_id')
-                   .notNull()
-                   .references(() => courses.id, { onDelete: 'restrict' }),
-    teacherId:   uuid('teacher_id')
-                   .references(() => teachers.id, { onDelete: 'set null' }),
-    description: varchar('description', { length: 200 }).notNull(),
-    semester:    academicSemesterEnum('semester').notNull(),
-    year:        integer('year').notNull(),
-    scheduleTime: time('schedule_time').notNull(),
-    room:        varchar('room', { length: 50 }).notNull(),
-    createdAt:   timestamp('created_at').defaultNow().notNull(),
-    updatedAt:   timestamp('updated_at').defaultNow().notNull(),
+    id: uuid("id").primaryKey().defaultRandom(),
+    courseId: uuid("course_id")
+      .notNull()
+      .references(() => courses.id, { onDelete: "restrict" }),
+    teacherId: uuid("teacher_id").references(() => teachers.id, {
+      onDelete: "set null",
+    }),
+    description: varchar("description", { length: 200 }).notNull(),
+    semester: academicSemesterEnum("semester").notNull(),
+    year: integer("year").notNull(),
+    scheduleTime: time("schedule_time").notNull(),
+    room: varchar("room", { length: 50 }).notNull(),
+    status: classStatusEnum("status").default("planned").notNull(),
+    isActive: boolean("is_active").default(true).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
   },
   (t) => ({
-    idxCourse:  index('classes_course_idx').on(t.courseId),
-    idxTeacher: index('classes_teacher_idx').on(t.teacherId),
+    idxCourse: index("classes_course_idx").on(t.courseId),
+    idxTeacher: index("classes_teacher_idx").on(t.teacherId),
   }),
-)
+);
 
 export const enrollments = pgTable(
   'enrollments',

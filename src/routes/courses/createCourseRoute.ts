@@ -3,6 +3,7 @@ import type { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import { courses } from "../../database/schema.ts";
 import { db } from "../../database/client.ts";
 import { checkRequestJWT } from "../hooks/check-request-jwt.ts";
+import { getUserFromRequest } from "../../utils/getUserFromRequest.ts";
 
 export const createCourseRoute: FastifyPluginAsyncZod = async (server) => {
   server.post(
@@ -35,6 +36,12 @@ export const createCourseRoute: FastifyPluginAsyncZod = async (server) => {
       },
     },
     async (request, reply) => {
+      const user = getUserFromRequest(request);
+
+      if(!user) { 
+        return reply.status(401).send({ message: "You aren't authorized" })
+      }
+
       try {
         const { name, workloadHours, durationSemesters, modality, isActive } =
           request.body;

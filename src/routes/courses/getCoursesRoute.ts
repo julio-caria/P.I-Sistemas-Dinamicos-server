@@ -3,6 +3,7 @@ import { checkRequestJWT } from "../hooks/check-request-jwt.ts";
 import z from "zod";
 import { courses } from "../../database/schema.ts";
 import { db } from "../../database/client.ts";
+import { getUserFromRequest } from "../../utils/getUserFromRequest.ts";
 
 export const getCoursesRoute: FastifyPluginAsyncZod = async (server) => {
   server.get("/api/v1/courses", {
@@ -28,6 +29,9 @@ export const getCoursesRoute: FastifyPluginAsyncZod = async (server) => {
               })
             )
           }),
+        401: z.object({
+                    message: z.string(),
+                  }),
         404: z.object({ 
           message: z.string(),
         }),
@@ -37,6 +41,12 @@ export const getCoursesRoute: FastifyPluginAsyncZod = async (server) => {
       }
     }
   }, async (request, reply) => {
+    const user = getUserFromRequest(request);
+    
+    if(!user) { 
+      return reply.status(401).send({ message: "You aren't authorized" })
+    }
+
     try { 
       const result = await db
         .select()

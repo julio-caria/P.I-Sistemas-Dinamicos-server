@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 import { db } from "../../database/client.ts";
 import { getUserFromRequest } from "../../utils/getUserFromRequest.ts";
 
-export const deleteCourseRoute: FastifyPluginAsyncZod = async (server) => { 
+export const deleteCourseRoute: FastifyPluginAsyncZod = async (server) => {
   server.delete(
     "/api/v1/courses/:id",
     {
@@ -21,7 +21,7 @@ export const deleteCourseRoute: FastifyPluginAsyncZod = async (server) => {
         response: {
           200: z.object({
             message: z.string(),
-            id: z.string().uuid(),
+            courseId: z.string().uuid(),
           }),
           401: z.object({
             message: z.string(),
@@ -66,7 +66,7 @@ export const deleteCourseRoute: FastifyPluginAsyncZod = async (server) => {
 
         return reply.status(200).send({
           message: "Course successfully deactivated.",
-          id: deletedCourse.id,
+          courseId: deletedCourse.id,
         });
       } catch (error) {
         server.log.error(

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll, afterEach } from "vitest";
-import { randomUUID } from "node:crypto";
+import { randomInt, randomUUID } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { server } from "../../helpers/server.ts";
 import { db } from "../../../src/database/client.ts";
@@ -27,22 +27,25 @@ describe("POST /api/v1/suppliers", () => {
     await server.close();
   });
 
-  function buildSupplierPayload(suffix: string, digit = "10") {
-    const base = String(Math.floor(10000000 + Math.random() * 90000000));
+  function buildSupplierPayload(suffix: string) {
+    const base = String(randomInt(10000000, 100000000));
+    const digit = String(randomInt(10, 100));
+    const phoneSuffix = String(randomInt(1000, 10000));
+
     return {
       legalName: `Editora Acadêmica ${suffix} Ltda`,
       cnpj: `${base.slice(0, 2)}.${base.slice(2, 5)}.${base.slice(5, 8)}/0001-${digit}`,
       stateRegistration: "110.042.490.114",
       email: `contato.${suffix}@fornecedor.test`,
-      phone: "(11) 3344-5566",
+      phone: `(11) 3344-${phoneSuffix}`,
       address: "Av. Lins de Vasconcelos, 1222 - São Paulo, SP",
       category: "Material Didático",
     };
   }
 
   it("should create a valid supplier and return 201 with supplierId", async () => {
-    const suffix = randomUUID().slice(0, 6);
-    const payload = buildSupplierPayload(suffix, "10");
+    const suffix = randomUUID().slice(0, 8);
+    const payload = buildSupplierPayload(suffix);
 
     const response = await server.inject({
       method: "POST",
@@ -78,9 +81,9 @@ describe("POST /api/v1/suppliers", () => {
   });
 
   it("should store stateRegistration as null when omitted", async () => {
-    const suffix = randomUUID().slice(0, 6);
+    const suffix = randomUUID().slice(0, 8);
     const { stateRegistration: _omitted, ...payloadWithoutIE } =
-      buildSupplierPayload(suffix, "11");
+      buildSupplierPayload(suffix);
 
     const response = await server.inject({
       method: "POST",
@@ -106,6 +109,44 @@ describe("POST /api/v1/suppliers", () => {
     expect(saved.stateRegistration).toBeNull();
   });
 
+  it("should return 409 when CNPJ is already registered", async () => {
+    const suffix = randomUUID().slice(0, 8);
+    const firstPayload = buildSupplierPayload(`${suffix}a`);
+
+    const firstResponse = await server.inject({
+      method: "POST",
+      url: "/api/v1/suppliers",
+      headers: {
+        authorization: `Bearer ${auth.token}`,
+      },
+      payload: firstPayload,
+    });
+
+    const firstBody = firstResponse.json();
+    if (firstBody.supplierId) {
+      createdSupplierIds.push(firstBody.supplierId);
+    }
+
+    expect(firstResponse.statusCode).toBe(201);
+
+    const secondResponse = await server.inject({
+      method: "POST",
+      url: "/api/v1/suppliers",
+      headers: {
+        authorization: `Bearer ${auth.token}`,
+      },
+      payload: {
+        ...buildSupplierPayload(`${suffix}b`),
+        cnpj: firstPayload.cnpj,
+      },
+    });
+
+    expect(secondResponse.statusCode).toBe(409);
+    expect(secondResponse.json()).toEqual({
+      message: "Supplier already registered!",
+    });
+  });
+
   it("should return 400 when required fields fail validation", async () => {
     const response = await server.inject({
       method: "POST",
@@ -123,12 +164,12 @@ describe("POST /api/v1/suppliers", () => {
   });
 
   it("should return 401 when Authorization header is missing", async () => {
-    const suffix = randomUUID().slice(0, 6);
+    const suffix = randomUUID().slice(0, 8);
 
     const response = await server.inject({
       method: "POST",
       url: "/api/v1/suppliers",
-      payload: buildSupplierPayload(suffix, "13"),
+      payload: buildSupplierPayload(suffix),
     });
 
     expect(response.statusCode).toBe(401);
